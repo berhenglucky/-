@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>เบอร์มงคลรายเดือน</title>
+<meta name="description" content="เลือกเบอร์มงคลรายเดือน ดูคำทำนายผลรวมและคู่เลข แล้วรับซิมที่สาขาใกล้คุณ">
+<meta name="theme-color" content="#F2F3F5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai+Looped:wght@400;500;600&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#F2F3F5; --card:#FFFFFF; --ink:#232833; --ink2:#4A4F5C; --muted:#868B97; --hair:#E4E5EA;
+  --gold:#B0893F; --gold-deep:#8C6A2A; --gold-soft:#D9BD7E; --champ:#EEDFBC; --champ2:#F8F0DD;
+  --good:#2E7D5B; --good-bg:#E6F2EC; --mid:#9A7420; --mid-bg:#F6EED9; --bad:#B4483B; --bad-bg:#F7E7E4;
+  --num:'Prompt','IBM Plex Sans Thai Looped','Noto Sans Thai','Leelawadee UI',Tahoma,sans-serif;
+  --body:'IBM Plex Sans Thai Looped','Noto Sans Thai Looped','Sarabun','Leelawadee UI',Tahoma,sans-serif;
+  --r-card:18px; --r-ctl:12px; --shadow:0 8px 24px rgba(28,33,48,.07);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink2);font:400 15px/1.6 var(--body);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--gold-soft);outline-offset:2px;border-radius:8px}
+img{max-width:100%;display:block}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:0;z-index:20;background:rgba(242,243,245,.92);backdrop-filter:saturate(1.4) blur(10px);
+  -webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--hair);padding-top:env(safe-area-inset-top,0px)}
+.top .wrap{display:flex;align-items:center;gap:12px;min-height:60px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);min-width:0}
+.brand img{height:36px;width:auto}
+.brand b{font:600 19px/1.2 var(--num);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top nav{margin-left:auto;display:flex;gap:6px}
+.ghost{border:1px solid var(--hair);background:var(--card);border-radius:999px;padding:7px 14px;font-size:14px;color:var(--ink)}
+.ghost:hover{border-color:var(--gold-soft)}
+.ghost{white-space:nowrap}
+.ghost .sm{display:none}
+@media (max-width:520px){.ghost .lg{display:none}.ghost .sm{display:inline}.ghost{padding:6px 12px;font-size:13.5px}.brand b{font-size:16.5px}}
+
+/* ---------- hero (artwork) ---------- */
+.hero{margin:16px auto 0;position:relative;border-radius:var(--r-card);overflow:hidden;background:var(--champ2);
+  aspect-ratio:16/5;box-shadow:var(--shadow)}
+.hero.m-square{aspect-ratio:16/5}
+.hero.plain{aspect-ratio:auto;box-shadow:none;background:linear-gradient(180deg,var(--champ2),#F4ECD9)}
+.slides{display:flex;height:100%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.slide{flex:0 0 100%;height:100%}
+.slide a,.slide picture{display:block;height:100%}
+.slide img{width:100%;height:100%;object-fit:cover}
+.dots{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:6px}
+.dots button{width:8px;height:8px;border-radius:99px;border:0;background:rgba(255,255,255,.6);padding:0}
+.dots button[aria-current="true"]{width:22px;background:#fff}
+.hero-text{height:100%;display:flex;flex-direction:column;justify-content:center;padding:24px 32px}
+.hero-text h1{margin:0;font:600 clamp(24px,4vw,40px)/1.15 var(--num);color:var(--ink)}
+.hero-text p{margin:8px 0 0;color:var(--ink2);max-width:46ch}
+@media (max-width:640px){
+  .hero{aspect-ratio:16/7;margin-top:12px}
+  .hero.plain{aspect-ratio:auto}
+  .hero.m-square{aspect-ratio:4/3}
+  .hero-text{padding:18px}
+}
+
+/* ---------- search ---------- */
+.finder{margin-top:20px;background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow);padding:16px}
+.search-row{display:flex;gap:10px;align-items:stretch}
+.search{flex:1;position:relative}
+.search input{width:100%;height:52px;border:1.5px solid var(--hair);border-radius:var(--r-ctl);padding:0 16px;
+  font:600 20px var(--num);letter-spacing:.08em;color:var(--ink);background:#FBFBFC}
+.search input::placeholder{font:400 15px var(--body);letter-spacing:0;color:var(--muted)}
+.search input:focus{border-color:var(--gold);outline:none;background:#fff}
+.seg{display:flex;background:#F1F1F3;border-radius:var(--r-ctl);padding:4px;flex:0 0 auto}
+.seg button{border:0;background:transparent;border-radius:9px;padding:0 14px;font-size:14px;color:var(--ink2);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);font-weight:600}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:14px 2px 2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--hair);background:#fff;border-radius:999px;padding:6px 14px;font-size:14px;color:var(--ink2)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.more-toggle{margin-top:12px;border:0;background:none;color:var(--gold-deep);font-weight:600;padding:4px 0}
+.filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:10px}
+.filters[hidden]{display:none}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.field select,.field input{width:100%;height:42px;border:1px solid var(--hair);border-radius:10px;padding:0 10px;background:#fff}
+.digits{display:flex;flex-wrap:wrap;gap:6px}
+.digits button{width:34px;height:34px;border-radius:9px;border:1px solid var(--hair);background:#fff;font:600 15px var(--num);color:var(--ink)}
+.digits button[aria-pressed="true"]{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.field.wide{grid-column:span 2}
+@media (max-width:860px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){
+  .search-row{flex-direction:column}
+  .seg{align-self:flex-start}
+  .seg button{padding:8px 14px}
+  .field.wide{grid-column:span 2}
+}
+
+/* ---------- results ---------- */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 2px 12px}
+.bar h2{margin:0;font:500 16px var(--body);color:var(--ink)}
+.bar h2 b{font-family:var(--num);font-weight:600}
+.bar select{height:38px;border:1px solid var(--hair);border-radius:10px;background:#fff;padding:0 10px}
+.active-tags{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 2px 12px}
+.tag{border:0;background:var(--champ2);color:var(--gold-deep);border-radius:999px;padding:4px 10px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:16px}
+@media (max-width:520px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+
+/* ---------- number card (ตามภาพแนบ) ---------- */
+.card{background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.card .num{padding:20px 10px 4px;text-align:center;font:600 clamp(19px,2.1vw,25px)/1.2 var(--num);color:var(--ink);
+  letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.card .sim{text-align:center;font-size:12.5px;color:var(--muted);padding-bottom:12px}
+.rule{height:2px;background:linear-gradient(90deg,rgba(217,189,126,0) 0%,var(--gold-soft) 18%,var(--gold) 50%,var(--gold-soft) 82%,rgba(217,189,126,0) 100%)}
+.card .cat{padding:14px 12px 4px;text-align:center;color:var(--ink);font-size:14.5px;line-height:1.45}
+.card .hl{text-align:center;font-size:12.5px;color:var(--muted);padding:0 10px 12px;min-height:30px}
+.card .pkg{margin-top:auto;padding:0 12px 14px}
+.card .pkg-label{font-size:13.5px;color:var(--ink)}
+.card .pkg-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
+.card .price{line-height:1.15}
+.card .price b{display:block;font:500 17px var(--num);color:var(--ink)}
+.card .price small{font-size:12.5px;font-weight:600;color:var(--ink)}
+.card .price em{display:block;font-style:normal;font-size:11.5px;color:var(--muted);margin-top:2px}
+.pick{border:1.5px solid var(--gold);background:#fff;color:var(--gold-deep);border-radius:999px;
+  padding:9px 18px;font:600 16px var(--num);min-width:76px;transition:background .15s,color .15s}
+.pick:hover{background:var(--gold);color:#fff}
+.card .foot{border:0;width:100%;background:var(--champ);color:var(--gold-deep);padding:11px 8px;font:600 14px var(--num);
+  display:flex;justify-content:center;align-items:center;gap:6px}
+.card .foot:hover{background:#E8D5A8}
+.card .foot svg{width:14px;height:14px}
+@media (max-width:520px){
+  .card .num{padding-top:16px}
+  .card .cat{padding:10px 8px 2px;font-size:13px}
+  .card .hl{font-size:11.5px;min-height:auto}
+  .card .pkg{padding:0 10px 12px}
+  .card .pkg-label{font-size:12px}
+  .pick{padding:7px 12px;font-size:14px;min-width:60px}
+  .card .price b{font-size:15px}
+}
+.loadmore{display:block;margin:24px auto 0;border:1.5px solid var(--gold);background:#fff;color:var(--gold-deep);
+  border-radius:999px;padding:10px 26px;font:600 15px var(--num)}
+.empty{background:var(--card);border-radius:var(--r-card);padding:32px 20px;text-align:center;color:var(--ink2)}
+.empty b{display:block;font:600 18px var(--num);color:var(--ink);margin-bottom:6px}
+.skeleton{height:250px;border-radius:var(--r-card);background:linear-gradient(90deg,#ececef 0%,#f6f6f8 50%,#ececef 100%);
+  background-size:200% 100%;animation:sk 1.2s infinite linear}
+@keyframes sk{to{background-position:-200% 0}}
+
+footer{margin:48px 0 0;padding:28px 0 40px;border-top:1px solid var(--hair);font-size:13.5px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+footer button{border:0;background:none;color:var(--gold-deep);padding:0;font-weight:600}
+footer p{margin:0;max-width:70ch}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(25,28,36,.45)}
+.modal[hidden]{display:none}
+.sheet{background:#fff;width:100%;max-width:560px;max-height:92vh;max-height:92dvh;overflow:auto;border-radius:22px 22px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.15);animation:up .28s cubic-bezier(.2,.8,.2,1)}
+@media (min-width:700px){.modal{align-items:center}.sheet{border-radius:22px;max-height:88vh}}
+@keyframes up{from{transform:translateY(24px);opacity:.4}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}.slides{transition:none}.skeleton{animation:none}}
+.sheet-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.sheet-head h3{margin:0;font:600 20px/1.3 var(--num);color:var(--ink);flex:1}
+.x{border:0;background:#F1F1F3;width:36px;height:36px;border-radius:99px;font-size:20px;line-height:1;color:var(--ink2);flex:0 0 auto}
+.btn{border:0;border-radius:var(--r-ctl);padding:13px 18px;font:600 16px var(--num);width:100%}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.primary:disabled{opacity:.45;cursor:not-allowed}
+.btn.gold{background:var(--gold);color:#fff}
+.btn.line{background:#fff;border:1.5px solid var(--hair);color:var(--ink)}
+.actions{display:flex;gap:10px;margin-top:18px}
+.actions .btn{flex:1}
+.note{font-size:13px;color:var(--muted)}
+.err{background:var(--bad-bg);color:var(--bad);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px}
+
+/* prediction */
+.ribbon{display:flex;justify-content:center;gap:4px;margin:6px 0 4px}
+.ribbon span{width:clamp(26px,8vw,40px);height:clamp(38px,11vw,54px);display:grid;place-items:center;border-radius:10px;
+  background:#F5F5F7;font:600 clamp(18px,5vw,28px) var(--num);color:var(--ink);transition:background .15s,color .15s}
+.ribbon span.pre{background:transparent;color:#B9BCC5}
+.ribbon span.on{background:var(--ink);color:#fff}
+.ribbon i{width:6px}
+.ribbon-cap{text-align:center;font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.medal-row{display:flex;gap:16px;align-items:center;background:var(--champ2);border-radius:16px;padding:14px}
+.medal{flex:0 0 auto;width:86px;height:86px;border-radius:50%;display:grid;place-items:center;text-align:center;
+  background:radial-gradient(circle at 35% 30%,#fff 0%,#F6EBCF 55%,#E9D3A1 100%);box-shadow:inset 0 0 0 3px var(--gold-soft),inset 0 0 0 7px #fff,inset 0 0 0 8px var(--gold-soft)}
+.medal b{display:block;font:700 30px/1 var(--num);color:var(--gold-deep)}
+.medal small{font-size:11.5px;color:var(--gold-deep)}
+.medal-row h4{margin:0 0 2px;font:600 16px var(--num);color:var(--ink)}
+.medal-row p{margin:0;font-size:14px}
+.score{display:flex;align-items:center;gap:10px;margin:16px 0 4px}
+.score .track{flex:1;height:8px;border-radius:99px;background:#EEEEF1;overflow:hidden}
+.score .fill{height:100%;background:linear-gradient(90deg,var(--gold-soft),var(--gold));border-radius:99px}
+.score b{font:600 15px var(--num);color:var(--ink);white-space:nowrap}
+.topics{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:14px 0 6px}
+.topic{background:#F7F7F9;border-radius:12px;padding:8px 4px;text-align:center}
+.topic b{display:block;font:600 15px var(--num);color:var(--ink)}
+.topic span{font-size:12px;color:var(--muted)}
+.topic.up{background:var(--good-bg)} .topic.up b{color:var(--good)}
+.topic.down{background:var(--bad-bg)} .topic.down b{color:var(--bad)}
+.pairs{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+.pairs li{display:flex;gap:12px;align-items:flex-start;padding:10px;border-radius:12px;border:1px solid var(--hair);cursor:pointer}
+.pairs li:hover,.pairs li.on{border-color:var(--gold-soft);background:#FFFCF5}
+.pairs .pp{flex:0 0 auto;width:46px;height:40px;border-radius:10px;display:grid;place-items:center;font:600 18px var(--num)}
+.lv-ดี .pp{background:var(--good-bg);color:var(--good)}
+.lv-กลาง .pp{background:var(--mid-bg);color:var(--mid)}
+.lv-ระวัง .pp{background:var(--bad-bg);color:var(--bad)}
+.pairs p{margin:0;font-size:14px;color:var(--ink2)}
+.pairs p b{font-weight:600;color:var(--ink)}
+.badge{display:inline-block;font-size:12px;border-radius:99px;padding:1px 8px;margin-left:6px;vertical-align:1px}
+.lv-ดี .badge,.badge.ดี{background:var(--good-bg);color:var(--good)}
+.lv-กลาง .badge,.badge.กลาง{background:var(--mid-bg);color:var(--mid)}
+.lv-ระวัง .badge,.badge.ระวัง{background:var(--bad-bg);color:var(--bad)}
+
+/* booking */
+.steps{display:flex;gap:6px;margin:0 0 16px;padding:0;list-style:none}
+.steps li{flex:1;font-size:12px;color:var(--muted);text-align:center}
+.steps li::before{content:"";display:block;height:4px;border-radius:99px;background:#ECECEF;margin-bottom:6px}
+.steps li.done::before,.steps li.now::before{background:var(--gold)}
+.steps li.now{color:var(--ink);font-weight:600}
+.sel-num{display:flex;justify-content:space-between;align-items:baseline;gap:10px;background:var(--champ2);border-radius:14px;padding:12px 14px;margin-bottom:14px}
+.sel-num b{font:600 22px var(--num);color:var(--ink);letter-spacing:.02em}
+.sel-num span{font-size:13px;color:var(--gold-deep);text-align:right}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--hair);border-radius:14px;padding:12px 14px;cursor:pointer;background:#fff}
+.opt:has(input:checked){border-color:var(--gold);background:#FFFCF5}
+.opt input{margin-top:5px;accent-color:var(--gold-deep);width:18px;height:18px;flex:0 0 auto}
+.opt .t{flex:1;min-width:0}
+.opt .t b{font:600 16px var(--num);color:var(--ink)}
+.opt .t .d{font-size:13px;color:var(--ink2);white-space:pre-line;margin-top:2px}
+.opt .t .m{font-size:12.5px;color:var(--muted)}
+.opt .r{text-align:right;font:600 16px var(--num);color:var(--ink);white-space:nowrap}
+.opt .r small{display:block;font:400 12px var(--body);color:var(--muted)}
+.mini{display:inline-block;font-size:11.5px;background:var(--ink);color:#fff;border-radius:99px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.mini.g{background:var(--gold)}
+.pickup-note{background:#F7F7F9;border-radius:12px;padding:10px 12px;font-size:14px;color:var(--ink);margin:0 0 12px}
+.geo{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink2);margin-bottom:10px;min-height:24px}
+.geo button{border:0;background:none;color:var(--gold-deep);font-weight:600;padding:0}
+.form{display:grid;gap:12px}
+.form label{font-size:13.5px;color:var(--ink)}
+.form input,.form textarea{width:100%;border:1.5px solid var(--hair);border-radius:12px;padding:12px;background:#fff;margin-top:4px}
+.form input:focus,.form textarea:focus{border-color:var(--gold);outline:none}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:13.5px}
+.consent input{width:18px;height:18px;margin-top:3px;accent-color:var(--gold-deep);flex:0 0 auto}
+.hp{position:absolute;left:-9999px}
+.sum-list{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14.5px;margin:0}
+.sum-list dt{color:var(--muted)}
+.sum-list dd{margin:0;color:var(--ink);font-weight:500}
+.done-code{text-align:center;padding:6px 0 4px}
+.done-code small{display:block;color:var(--muted);font-size:13px}
+.done-code b{font:700 28px var(--num);color:var(--ink);letter-spacing:.04em}
+.timer{text-align:center;font-size:14px;color:var(--gold-deep);margin-bottom:12px}
+.howto{margin:12px 0 0;padding-left:20px;font-size:14px;color:var(--ink2)}
+.msg{width:100%;min-height:150px;border:1px solid var(--hair);border-radius:12px;padding:10px;background:#FAFAFB;font-size:13.5px;resize:vertical}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;
+  padding:10px 16px;border-radius:12px;font-size:14px;z-index:80;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.shop-meta{font-size:12.5px;color:var(--muted)}
+.shop-links{display:flex;gap:12px;margin-top:4px;font-size:13px}
+.shop-links a{color:var(--gold-deep);font-weight:600;text-decoration:none}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./" id="brand"><b id="siteName">เบอร์มงคลรายเดือน</b></a>
+    <nav>
+      <button class="ghost" id="btnShops" type="button"><span class="lg">สาขาใกล้คุณ</span><span class="sm">สาขา</span></button>
+      <button class="ghost" id="btnStatus" type="button"><span class="lg">เช็กการจอง</span><span class="sm">เช็กจอง</span></button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" id="hero" aria-label="โปรโมชัน"></section>
+
+  <section class="finder" aria-label="ค้นหาเบอร์">
+    <div class="search-row">
+      <div class="search">
+        <label class="sr" for="q">ค้นหาเลขที่ต้องการ</label>
+        <input id="q" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="พิมพ์เลขที่อยากได้ เช่น 789 หรือวันเกิด">
+      </div>
+      <div class="seg" role="group" aria-label="ตำแหน่งเลข">
+        <button type="button" data-mode="any" aria-pressed="true">มีเลขนี้</button>
+        <button type="button" data-mode="end" aria-pressed="false">ลงท้ายด้วย</button>
+      </div>
+    </div>
+    <div class="chips" id="catChips" role="group" aria-label="หมวดเบอร์"></div>
+    <button class="more-toggle" id="moreToggle" type="button" aria-expanded="false" aria-controls="filters">ตัวกรองเพิ่มเติม</button>
+    <div class="filters" id="filters" hidden>
+      <div class="field"><label for="fTopic">เด่นด้าน</label>
+        <select id="fTopic"><option value="">ทั้งหมด</option><option value="เงิน">การเงิน</option><option value="งาน">การงาน</option>
+          <option value="รัก">ความรัก</option><option value="โชค">โชคลาภ</option></select></div>
+      <div class="field"><label for="fPkg">แพ็กเกจเริ่มต้นไม่เกิน</label><select id="fPkg"><option value="">ทุกราคา</option></select></div>
+      <div class="field"><label for="fSum">ผลรวม</label><select id="fSum"><option value="">ทุกผลรวม</option></select></div>
+      <div class="field"><label for="fBranch">สาขาที่มีเบอร์</label><select id="fBranch"><option value="">ทุกสาขา</option></select></div>
+      <div class="field wide"><label>ไม่เอาเลข (ไม่นับ 3 ตัวหน้า)</label><div class="digits" id="fExcl"></div></div>
+      <div class="field"><label for="fGood">คู่เลข</label><select id="fGood"><option value="">ทั้งหมด</option><option value="1">ไม่มีคู่เลขที่ควรระวัง</option></select></div>
+    </div>
+  </section>
+
+  <div class="bar">
+    <h2 id="count" aria-live="polite">กำลังโหลดเบอร์…</h2>
+    <label class="sr" for="sort">เรียงตาม</label>
+    <select id="sort">
+      <option value="rec">แนะนำ (คะแนนคำทำนาย)</option>
+      <option value="pkgAsc">แพ็กเกจ ต่ำ → สูง</option>
+      <option value="pkgDesc">แพ็กเกจ สูง → ต่ำ</option>
+      <option value="sum">ผลรวม</option>
+    </select>
+  </div>
+  <div class="active-tags" id="tags"></div>
+  <div class="grid" id="grid"></div>
+  <button class="loadmore" id="more" type="button" hidden>ดูเบอร์เพิ่ม</button>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p id="footNote">คำทำนายคำนวณจากศาสตร์ตัวเลข (ผลรวมและคู่เลข) ใช้ประกอบการตัดสินใจ ไม่ใช่การรับประกันผล</p>
+    <button type="button" id="btnStatus2">ตรวจสอบสถานะการจอง</button>
+  </div>
+</footer>
+
+<div class="modal" id="modal" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mTitle" id="sheet"></div></div>
+
+<script>
+/* ===================== ตั้งค่า ===================== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbzYqIqQzq5n14XxhGZR5kFHXvh7mrkwT68R3djz9Josj42VrlM9ikUkY3xnIZRONyQ/exec';   // ← วาง URL Web App (/exec) ของ Apps Script ตรงนี้ · เว้นว่าง = โหมดตัวอย่าง
+const PAGE = 40;
+
+/* ===================== ข้อมูลตัวเลข ===================== */
+const PLANET = ['ศูนย์','อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์','ราหู','เกตุ'];
+const PLANET_KW = ['การเริ่มต้นใหม่ ความว่าง','ผู้นำ เกียรติยศ ความมั่นใจ','ความอ่อนโยน เสน่ห์ จินตนาการ','ความกล้า พลังขับเคลื่อน',
+  'การสื่อสาร การเจรจา ไหวพริบ','สติปัญญา ผู้ใหญ่อุปถัมภ์','ความรัก ความสุข การเงิน','ความอดทน ความรับผิดชอบ',
+  'ความทะเยอทะยาน โชคลาภฉับพลัน','สิ่งศักดิ์สิทธิ์ สัญชาตญาณ ความสำเร็จ'];
+const star = d => d===0 ? 'เลข 0' : 'ดาว' + PLANET[d];
+const TOPIC_TH = {งาน:'การงาน', เงิน:'การเงิน', รัก:'ความรัก', โชค:'โชคลาภ', สุขภาพ:'สุขภาพ'};
+const TOPIC_ORDER = ['งาน','เงิน','รัก','โชค','สุขภาพ'];
+
+const S = {cfg:null, items:[], view:[], shown:0, pairs:{}, sums:{}, cat:{}, pkg:{}, shops:[], geo:null,
+  f:{q:'', mode:'any', cat:'', topic:'', maxPkg:'', sum:'', branch:'', excl:new Set(), good:'', sort:'rec'}};
+
+/* ===================== utils ===================== */
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtNum = n => n.slice(0,3)+'-'+n.slice(3,6)+'-'+n.slice(6);
+const money = n => Number(n||0).toLocaleString('th-TH');
+const truthy = v => v === true || /^(true|1|yes|y|ใช่)$/i.test(String(v).trim());
+function toast(t){ const d=document.createElement('div'); d.className='toast'; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),2600); }
+
+function jsonp(action, p){
+  return new Promise((resolve, reject) => {
+    const cb = '__lk' + Date.now().toString(36) + Math.floor(Math.random()*1e5);
+    const s = document.createElement('script');
+    const t = setTimeout(() => { done(); reject(new Error('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่')); }, 45000);
+    function done(){ clearTimeout(t); delete window[cb]; s.remove(); }
+    window[cb] = r => { done(); if (r && r.ok) resolve(r.data); else { const e = new Error((r && r.error) || 'เกิดข้อผิดพลาด'); e.code = r && r.code; reject(e); } };
+    s.onerror = () => { done(); reject(new Error('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่')); };
+    s.src = API_URL + '?action=' + encodeURIComponent(action) + '&callback=' + cb + (p ? '&p=' + encodeURIComponent(JSON.stringify(p)) : '') + '&_=' + Date.now();
+    document.head.appendChild(s);
+  });
+}
+const api = (action, p) => API_URL ? jsonp(action, p) : demoApi(action, p);
+
+/* ===================== ศาสตร์ตัวเลข ===================== */
+function pairInfo(p){
+  const hit = S.pairs[p] || S.pairs[p[1]+p[0]];
+  if (hit) return hit;
+  const a=+p[0], b=+p[1];
+  return {level:'กลาง', topic:'', meaning: a===b ? `พลัง${star(a)}ซ้อนกัน: ${PLANET_KW[a]}` : `${star(a)}คู่${star(b)}: ${PLANET_KW[a]} และ${PLANET_KW[b]}`};
+}
+function sumInfo(s){
+  const hit = S.sums[s];
+  if (hit) return hit;
+  const r = s % 9 || 9;
+  return {level:'กลาง', meaning:`ผลรวมอยู่ในพลัง${star(r)}: ${PLANET_KW[r]}`};
+}
+function analyze(num){
+  const sum = [...num].reduce((a,d)=>a+ +d, 0);
+  const tail = num.slice(3), pairs = [], topics = {};
+  TOPIC_ORDER.forEach(t => topics[t] = 0);
+  let score = 42, bad = 0;
+  for (let i=0;i<tail.length-1;i++){
+    const p = tail[i]+tail[i+1], info = pairInfo(p);
+    pairs.push({p, pos:3+i, ...info});
+    const w = info.level==='ดี' ? 1 : info.level==='ระวัง' ? -1 : 0;
+    score += w>0 ? 7 : w<0 ? -9 : 0;
+    if (w<0) bad++;
+    String(info.topic||'').split(/[,\s]+/).filter(Boolean).forEach(t => { if (topics[t]!==undefined) topics[t]+=w; });
+  }
+  const si = sumInfo(sum);
+  score += si.level==='ดี' ? 8 : si.level==='ระวัง' ? -8 : 0;
+  score = Math.max(5, Math.min(99, score));
+  const top = TOPIC_ORDER.filter(t => topics[t]>0 && t!=='สุขภาพ').sort((a,b)=>topics[b]-topics[a]).slice(0,2);
+  const grade = score>=80 ? 'ดีมาก' : score>=62 ? 'ดี' : score>=45 ? 'ปานกลาง' : 'ควรพิจารณา';
+  return {sum, sumInfo:si, pairs, topics, top, score, grade, bad};
+}
+const topText = (a, n=2) => a.top.length ? 'เด่นด้าน' + a.top.slice(0,n).map(t=>TOPIC_TH[t]).join('และ') : 'พลังสมดุล';
+
+/* ===================== lookups ===================== */
+function parsePromo(code){   // v1.1 — อ่านได้ทั้ง "Premium_699_6M" และ "1,199บ./12 เดือน"
+  const s = String(code||'').trim(), t = s.replace(/,/g,'');
+  const m = t.match(/(\d{2,5})\s*(?:บาท|บ\.?)?\s*[\/_\-\s]\s*(\d{1,2})\s*(?:M|เดือน|ด\.)/i);
+  const price = m ? +m[1] : (+(t.match(/\d{3,5}/)||[0])[0]), months = m ? +m[2] : 0;
+  const name = /^[A-Za-z]/.test(s) ? s.replace(/[_\s]*\d{1,2}\s*M$/i,'').replace(/_/g,' ').trim() : (price ? 'รายเดือน ' + money(price) : (s || 'แพ็กเกจรายเดือน'));
+  return {code:s, name, price, months, detail:'', active:true};
+}
+function pkgInfo(code){
+  const row = S.pkg[code], base = parsePromo(code);
+  if (!row) return base;
+  return {code, name: row.name || base.name, price: +row.price || base.price, months: +row.months || base.months, detail: row.detail || '', active: truthy(row.active)};
+}
+function catInfo(raw){ return S.cat[raw] || {raw, display:String(raw).replace(/_/g,' ').replace(/[\s-]+[A-Z]{2,4}\d{0,2}$/,'').trim() || 'เบอร์มงคล', description:'', simPrice:'', active:true}; }   // v1.2.1
+function simOf(it){
+  let p = it.price;
+  if (p === '' || p == null) p = catInfo(it.cat).simPrice;
+  if (p === '' || p == null) p = S.cfg.settings.DEFAULT_SIM_PRICE;
+  if (p === '' || p == null) return 'ค่าซิม สอบถามที่ร้าน';
+  return +p > 0 ? `ค่าซิม ${money(p)} บาท` : 'ฟรีค่าซิม';
+}
+function shopOf(code){ return S.shops.find(s => String(s.code)===String(code)); }
+function shopName(code){ const s = shopOf(code); return s ? s.name : ((S.cfg && S.cfg.names && S.cfg.names[code]) || 'สาขาใกล้คุณ'); }   // v1.2 ไม่โชว์รหัสสาขา
+
+function buildLookups(){
+  const c = S.cfg;
+  S.pairs = {}; (c.pairs||[]).forEach(r => { const k = String(r.pair).padStart(2,'0'); if (/^\d\d$/.test(k)) S.pairs[k] = {level:r.level||'กลาง', topic:r.topic||'', meaning:r.meaning||''}; });
+  S.sums = {};  (c.sums||[]).forEach(r => { if (r.sum!=='' ) S.sums[+r.sum] = {level:r.level||'กลาง', meaning:r.meaning||''}; });
+  S.cat = {};   (c.categories||[]).forEach(r => S.cat[r.raw] = {...r, active: truthy(r.active)});
+  S.pkg = {};   (c.packages||[]).forEach(r => S.pkg[r.code] = r);
+  S.shops = (c.shops||[]).map(s => ({...s, lat:+s.lat||null, lng:+s.lng||null}));
+}
+
+/* ===================== โหลดข้อมูล ===================== */
+async function init(){
+  renderSkeleton();
+  try{
+    const [cfg, data] = await Promise.all([api('config'), api('numbers')]);
+    S.cfg = cfg; buildLookups();
+    const held = new Set(data.held || []);
+    S.items = (data.n||[]).map(r => ({num:r[0], cat:data.c[r[1]], pkgCode:data.p[r[2]], branch:data.b[r[3]], price:r[4], grade:r[5]}))
+      .filter(it => !held.has(it.branch+':'+it.num) && catInfo(it.cat).active !== false);
+    const seenNum = new Set();   // v1.2.2 — เบอร์เดียวกันอยู่หลายชีทสาขา แสดงการ์ดเดียว
+    S.items = S.items.filter(it => !seenNum.has(it.num) && seenNum.add(it.num));
+    S.items.forEach(it => { it.a = analyze(it.num); it.pkg = pkgInfo(it.pkgCode); });
+    applySite(); renderHero(); renderFilterOptions(); readUrl(); apply();
+    const n = new URLSearchParams(location.search).get('n');
+    if (n){ const it = S.items.find(x => x.num===n.replace(/\D/g,'')); if (it) openPredict(it); }
+  }catch(e){
+    $('#grid').innerHTML = `<div class="empty" style="grid-column:1/-1"><b>โหลดรายการเบอร์ไม่สำเร็จ</b>${esc(e.message)}<br><button class="loadmore" onclick="location.reload()">ลองอีกครั้ง</button></div>`;
+    $('#count').textContent = '';
+  }
+}
+
+function applySite(){
+  const st = S.cfg.settings || {};
+  document.title = st.SITE_NAME || document.title;
+  $('#siteName').textContent = st.SITE_NAME || 'เบอร์มงคลรายเดือน';
+  if (st.LOGO_URL) $('#brand').insertAdjacentHTML('afterbegin', `<img src="${esc(st.LOGO_URL)}" alt="">`);
+  if (st.DISCLAIMER) $('#footNote').textContent = st.DISCLAIMER;
+}
+
+/* ===================== hero / artwork ===================== */
+let heroIdx = 0, heroTimer = null;
+function renderHero(){
+  const el = $('#hero'), arts = S.cfg.artwork || [], st = S.cfg.settings || {};
+  if (!arts.length){
+    el.classList.add('plain');
+    el.innerHTML = `<div class="hero-text"><h1>${esc(st.SITE_NAME||'เบอร์มงคลรายเดือน')}</h1><p>${esc(st.SITE_TAGLINE||'')}</p></div>`;
+    return;
+  }
+  el.classList.toggle('m-square', arts.every(a => a.imageMobile));
+  el.innerHTML = `<div class="slides">${arts.map(a => {
+    const img = `<picture>${a.imageMobile?`<source media="(max-width:640px)" srcset="${esc(a.imageMobile)}">`:''}<img src="${esc(a.imageDesktop||a.imageMobile)}" alt="${esc(a.title||'')}" loading="lazy"></picture>`;
+    return `<div class="slide">${a.link?`<a href="${esc(a.link)}" target="_blank" rel="noopener">${img}</a>`:img}</div>`;}).join('')}</div>
+    ${arts.length>1?`<div class="dots">${arts.map((a,i)=>`<button type="button" aria-label="ภาพที่ ${i+1}" data-i="${i}"></button>`).join('')}</div>`:''}`;
+  const first = el.querySelector('img'); if (first) first.loading = 'eager';
+  const go = i => { heroIdx = (i + arts.length) % arts.length; el.querySelector('.slides').style.transform = `translateX(-${heroIdx*100}%)`;
+    el.querySelectorAll('.dots button').forEach((b,j)=>b.setAttribute('aria-current', j===heroIdx)); };
+  el.querySelectorAll('.dots button').forEach(b => b.onclick = () => { go(+b.dataset.i); restart(); });
+  let x0 = null;
+  el.addEventListener('touchstart', e => x0 = e.touches[0].clientX, {passive:true});
+  el.addEventListener('touchend', e => { if (x0===null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx)>40){ go(heroIdx + (dx<0?1:-1)); restart(); } x0=null; });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function restart(){ clearInterval(heroTimer); if (arts.length>1 && !reduce) heroTimer = setInterval(()=>go(heroIdx+1), 6000); }
+  go(0); restart();
+}
+
+/* ===================== filters ===================== */
+function renderFilterOptions(){
+  // v1.2.1 — รวมหมวดชื่อเดียวกันจากหลายสาขาเป็นปุ่มเดียว
+  const ord = c => { const v = catInfo(c).sort; return v === '' || v == null || isNaN(+v) ? 999 : +v; };
+  const groups = {};
+  S.items.forEach(it => { const d = catInfo(it.cat).display; const g = groups[d] || (groups[d] = {n:0, o:999}); g.n++; g.o = Math.min(g.o, ord(it.cat)); });
+  const catList = Object.keys(groups).sort((a,b) => groups[a].o-groups[b].o || groups[b].n-groups[a].n);
+  $('#catChips').innerHTML = `<button class="chip" type="button" data-cat="" aria-pressed="true">ทุกหมวด</button>` +
+    catList.map(d => `<button class="chip" type="button" data-cat="${esc(d)}" aria-pressed="false">${esc(d)}</button>`).join('');
+  const prices = [...new Set(S.items.map(it => it.pkg.price).filter(Boolean))].sort((a,b)=>a-b);
+  $('#fPkg').insertAdjacentHTML('beforeend', prices.map(p => `<option value="${p}">${money(p)} บาท</option>`).join(''));
+  const sums = [...new Set(S.items.map(it => it.a.sum))].sort((a,b)=>a-b);
+  $('#fSum').insertAdjacentHTML('beforeend', sums.map(s => `<option value="${s}">${s}${S.sums[s]&&S.sums[s].level==='ดี'?' (ผลรวมดี)':''}</option>`).join(''));
+  const brs = [...new Set(S.items.map(it => it.branch))];
+  $('#fBranch').insertAdjacentHTML('beforeend', brs.map(b => `<option value="${esc(b)}">${esc(shopName(b))}</option>`).join(''));
+  $('#fExcl').innerHTML = [0,1,2,3,4,5,6,7,8,9].map(d => `<button type="button" data-d="${d}" aria-pressed="false" aria-label="ไม่เอาเลข ${d}">${d}</button>`).join('');
+}
+
+function readUrl(){
+  const u = new URLSearchParams(location.search);
+  const b = u.get('b'); if (b && [...$('#fBranch').options].some(o=>o.value===b)){ S.f.branch = b; $('#fBranch').value = b; }
+  const q = u.get('q'); if (q){ S.f.q = q.replace(/\D/g,''); $('#q').value = S.f.q; }
+}
+
+/* v1.2.3 — ลิงก์บนแถบที่อยู่ตรงกับตัวกรองสาขาเสมอ (กด ✕ แล้ว ?b= หายไปด้วย) */
+function syncUrl(){
+  try{
+    const u = new URL(location.href);
+    if (S.f.branch) u.searchParams.set('b', S.f.branch); else u.searchParams.delete('b');
+    const next = u.pathname + (u.searchParams.toString() ? '?' + u.searchParams.toString() : '') + u.hash;
+    if (next !== location.pathname + location.search + location.hash) history.replaceState(null, '', next);
+  }catch(e){}
+}
+function showBranch(code){
+  const ok = [...$('#fBranch').options].some(o => o.value === String(code));
+  if (!ok){ toast('สาขานี้ยังไม่มีเบอร์ว่างบนเว็บ'); return; }
+  S.f.branch = String(code); $('#fBranch').value = String(code);
+  closeModal(); apply(); $('.bar').scrollIntoView({behavior:'smooth', block:'start'});
+}
+function apply(){
+  const f = S.f;
+  let v = S.items.filter(it => {
+    if (f.q){ if (f.mode==='end' ? !it.num.endsWith(f.q) : !it.num.includes(f.q)) return false; }
+    if (f.cat && catInfo(it.cat).display!==f.cat) return false;   // v1.2.1 กรองตามชื่อหมวดที่ลูกค้าเห็น
+    if (f.branch && it.branch!==f.branch) return false;
+    if (f.maxPkg && it.pkg.price > +f.maxPkg) return false;
+    if (f.sum && it.a.sum !== +f.sum) return false;
+    if (f.topic && !(it.a.topics[f.topic] > 0)) return false;
+    if (f.good && it.a.bad) return false;
+    if (f.excl.size){ const t = it.num.slice(3); for (const d of f.excl) if (t.includes(d)) return false; }
+    return true;
+  });
+  const by = {rec:(a,b)=>b.a.score-a.a.score || a.pkg.price-b.pkg.price, pkgAsc:(a,b)=>a.pkg.price-b.pkg.price || b.a.score-a.a.score,
+    pkgDesc:(a,b)=>b.pkg.price-a.pkg.price, sum:(a,b)=>a.a.sum-b.a.sum};
+  v.sort(by[f.sort] || by.rec);
+  S.view = v; S.shown = 0;
+  $('#grid').innerHTML = '';
+  syncUrl();   // v1.2.3
+  $('#count').innerHTML = v.length ? `พบ <b>${money(v.length)}</b> เบอร์` : 'ไม่พบเบอร์ที่ตรงเงื่อนไข';
+  renderTags();
+  if (!v.length){
+    $('#grid').innerHTML = `<div class="empty" style="grid-column:1/-1"><b>ยังไม่มีเบอร์ตามเงื่อนไขนี้</b>ลองพิมพ์เลขให้สั้นลง หรือล้างตัวกรองบางอย่าง<br><button class="loadmore" type="button" onclick="resetFilters()">ล้างตัวกรองทั้งหมด</button></div>`;
+    $('#more').hidden = true; return;
+  }
+  renderMore();
+}
+function renderTags(){
+  const f = S.f, t = [];
+  if (f.branch) t.push(['branch', shopName(f.branch)]);
+  if (f.topic) t.push(['topic', 'เด่น' + TOPIC_TH[f.topic]]);
+  if (f.maxPkg) t.push(['maxPkg', 'แพ็กเกจ ≤ ' + money(f.maxPkg)]);
+  if (f.sum) t.push(['sum', 'ผลรวม ' + f.sum]);
+  if (f.good) t.push(['good', 'ไม่มีคู่ระวัง']);
+  if (f.excl.size) t.push(['excl', 'ไม่เอาเลข ' + [...f.excl].sort().join(' ')]);
+  $('#tags').innerHTML = t.map(([k,l]) => `<button class="tag" type="button" data-k="${k}" aria-label="ล้าง ${esc(l)}">${esc(l)} ✕</button>`).join('');
+}
+function resetFilters(){
+  Object.assign(S.f, {q:'', cat:'', topic:'', maxPkg:'', sum:'', branch:'', good:'', excl:new Set()});
+  $('#q').value=''; ['#fTopic','#fPkg','#fSum','#fBranch','#fGood'].forEach(s => $(s).value='');
+  document.querySelectorAll('#fExcl button').forEach(b => b.setAttribute('aria-pressed','false'));
+  document.querySelectorAll('#catChips .chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.cat===''));
+  apply();
+}
+
+/* ===================== cards ===================== */
+const ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function cardHTML(it, i){
+  const c = catInfo(it.cat), p = it.pkg;
+  return `<article class="card">
+    <div class="num">${fmtNum(it.num)}</div>
+    <div class="sim">${esc(simOf(it))}</div>
+    <div class="rule" aria-hidden="true"></div>
+    <div class="cat">หมวด ${esc(c.display)}</div>
+    <div class="hl">ผลรวม ${it.a.sum} ${esc(topText(it.a,1))}</div>
+    <div class="pkg">
+      <div class="pkg-label">แพ็กเกจรายเดือน เริ่มต้น</div>
+      <div class="pkg-row">
+        <div class="price"><b>${money(p.price)}</b><small>บาท/เดือน</small>${p.months?`<em>สัญญา ${p.months} เดือน</em>`:''}</div>
+        <button class="pick" type="button" data-act="select" data-i="${i}" aria-label="เลือกเบอร์ ${fmtNum(it.num)}">เลือก</button>
+      </div>
+    </div>
+    <button class="foot" type="button" data-act="predict" data-i="${i}">ดูคำทำนาย ${ARROW}</button>
+  </article>`;
+}
+function renderMore(){
+  const next = S.view.slice(S.shown, S.shown + PAGE);
+  $('#grid').insertAdjacentHTML('beforeend', next.map((it,k) => cardHTML(it, S.shown + k)).join(''));
+  S.shown += next.length;
+  $('#more').hidden = S.shown >= S.view.length;
+}
+function renderSkeleton(){ $('#grid').innerHTML = Array.from({length:8}, () => '<div class="skeleton"></div>').join(''); }
+
+/* ===================== modal ===================== */
+let lastFocus = null, modalTick = null;
+function openModal(html){
+  lastFocus = document.activeElement;
+  $('#sheet').innerHTML = html; $('#modal').hidden = false; document.body.style.overflow = 'hidden';
+  const f = $('#sheet').querySelector('.x'); if (f) f.focus();
+}
+function closeModal(){
+  $('#modal').hidden = true; document.body.style.overflow = ''; clearInterval(modalTick);
+  if (lastFocus) lastFocus.focus();
+}
+$('#modal').addEventListener('click', e => { if (e.target.id==='modal' || e.target.closest('.x')) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key==='Escape' && !$('#modal').hidden) closeModal(); });
+const head = t => `<div class="sheet-head"><h3 id="mTitle">${t}</h3><button class="x" type="button" aria-label="ปิด">×</button></div>`;
+
+/* ---------- คำทำนาย ---------- */
+function openPredict(it){
+  const a = it.a, c = catInfo(it.cat);
+  const digits = [...it.num].map((d,i) => `<span class="${i<3?'pre':''}" data-pos="${i}">${d}</span>${i===2||i===5?'<i></i>':''}`).join('');
+  const tp = TOPIC_ORDER.map(t => { const v = a.topics[t]; return `<div class="topic ${v>0?'up':v<0?'down':''}"><b>${v>0?'+'+v:v}</b><span>${TOPIC_TH[t]}</span></div>`; }).join('');
+  openModal(`${head('คำทำนายเบอร์')}
+    <div class="ribbon" aria-label="${fmtNum(it.num)}">${digits}</div>
+    <div class="ribbon-cap">ทำนายจากผลรวมทุกหลัก และคู่เลข 7 ตัวท้าย</div>
+    <div class="medal-row">
+      <div class="medal"><div><b>${a.sum}</b><small>ผลรวม</small></div></div>
+      <div><h4>${esc(c.display)} <span class="badge ${esc(a.sumInfo.level)}">ผลรวม${esc(a.sumInfo.level)}</span></h4><p>${esc(a.sumInfo.meaning)}</p>
+      ${c.description?`<p class="note" style="margin-top:6px">${esc(c.description)}</p>`:''}</div>
+    </div>
+    <div class="score"><div class="track"><div class="fill" style="width:${a.score}%"></div></div><b>${a.score}/100 ${a.grade}</b></div>
+    <div class="topics">${tp}</div>
+    <ul class="pairs">${a.pairs.map(p => `<li class="lv-${esc(p.level)}" data-pos="${p.pos}" tabindex="0">
+      <div class="pp">${p.p}</div><p><b>คู่ ${p.p}</b><span class="badge">${esc(p.level)}</span><br>${esc(p.meaning)}</p></li>`).join('')}</ul>
+    <p class="note" style="margin-top:14px">${esc(S.cfg.settings.DISCLAIMER||'')}</p>
+    <div class="actions"><button class="btn line" type="button" id="share">แชร์เบอร์นี้</button><button class="btn primary" type="button" id="toSelect">เลือกเบอร์นี้</button></div>`);
+  const mark = pos => $('#sheet').querySelectorAll('.ribbon span').forEach(s => s.classList.toggle('on', pos!==null && (+s.dataset.pos===pos || +s.dataset.pos===pos+1)));
+  $('#sheet').querySelectorAll('.pairs li').forEach(li => {
+    const on = () => { $('#sheet').querySelectorAll('.pairs li').forEach(x=>x.classList.remove('on')); li.classList.add('on'); mark(+li.dataset.pos); };
+    li.addEventListener('mouseenter', on); li.addEventListener('focus', on); li.addEventListener('click', on);
+  });
+  $('#toSelect').onclick = () => openBooking(it);
+  $('#share').onclick = async () => {
+    const url = location.origin + location.pathname + '?n=' + it.num;
+    try { if (navigator.share) await navigator.share({title: fmtNum(it.num), text: 'เบอร์มงคล ' + fmtNum(it.num), url}); else { await navigator.clipboard.writeText(url); toast('คัดลอกลิงก์แล้ว'); } } catch(e){}
+  };
+}
+
+/* ---------- จอง ---------- */
+const B = {};
+const STEP_NAMES = ['แพ็กเกจ','รับซิม','ข้อมูลติดต่อ','ยืนยัน'];
+function openBooking(it){
+  Object.assign(B, {it, step:0, pkg:it.pkgCode, shop:it.branch, name:B.name||'', phone:B.phone||'', note:'', consent:false, err:''});
+  renderBooking();
+}
+function stepper(){ return `<ol class="steps">${STEP_NAMES.map((n,i)=>`<li class="${i<B.step?'done':i===B.step?'now':''}">${n}</li>`).join('')}</ol>`; }
+function selNum(){ return `<div class="sel-num"><b>${fmtNum(B.it.num)}</b><span>หมวด ${esc(catInfo(B.it.cat).display)}<br>${esc(simOf(B.it))}</span></div>`; }
+function distKm(a, b){
+  const R=6371, r=x=>x*Math.PI/180, dLat=r(b.lat-a.lat), dLng=r(b.lng-a.lng);
+  const h = Math.sin(dLat/2)**2 + Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+function sortedShops(){
+  let list = S.shops.slice();
+  if (!truthy(S.cfg.settings.ALLOW_OTHER_SHOP)) list = list.filter(s => String(s.code)===String(B.it.branch));
+  if (!list.some(s => String(s.code)===String(B.it.branch))) list.unshift({code:B.it.branch, name:shopName(B.it.branch)});
+  list.forEach(s => s.km = (S.geo && s.lat && s.lng) ? distKm(S.geo, s) : null);
+  list.sort((a,b) => (a.km ?? 1e9) - (b.km ?? 1e9));
+  return list;
+}
+function locate(force){
+  if (S.geo && !force) return Promise.resolve(S.geo);
+  return new Promise((res, rej) => {
+    if (!navigator.geolocation) return rej(new Error('อุปกรณ์นี้ไม่รองรับการระบุตำแหน่ง'));
+    navigator.geolocation.getCurrentPosition(p => { S.geo = {lat:p.coords.latitude, lng:p.coords.longitude}; res(S.geo); },
+      () => rej(new Error('ไม่ได้รับสิทธิ์ตำแหน่ง')), {enableHighAccuracy:false, timeout:10000, maximumAge:600000});
+  });
+}
+function mapsLink(s){ return s.lat && s.lng ? `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}` : (s.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.name)}`); }
+
+function renderBooking(){
+  const st = S.cfg.settings, it = B.it, start = it.pkg;
+  let body = '';
+  if (B.step===0){
+    const higher = Object.keys(S.pkg).map(pkgInfo).filter(p => p.active && p.code!==start.code && p.price > start.price)
+      .sort((a,b)=>a.price-b.price).slice(0,6);
+    const opt = (p, tag) => `<label class="opt"><input type="radio" name="pkg" value="${esc(p.code)}" ${B.pkg===p.code?'checked':''}>
+      <div class="t"><b>${esc(p.name)}</b>${tag}${p.detail?`<div class="d">${esc(p.detail)}</div>`:''}<div class="m">${p.months?`สัญญา ${p.months} เดือน`:''}</div></div>
+      <div class="r">${money(p.price)}<small>บาท/เดือน</small></div></label>`;
+    body = `<p class="pickup-note">${esc(st.PICKUP_NOTE||'')}</p>
+      <div class="opts">${opt(start,'<span class="mini">เริ่มต้น</span>')}${higher.map(p=>opt(p,'<span class="mini g">อัปเกรด</span>')).join('')}</div>
+      ${higher.length?'':'<p class="note" style="margin-top:8px">เบอร์นี้มีแพ็กเกจเริ่มต้นเพียงแบบเดียว</p>'}`;
+  } else if (B.step===1){
+    const list = sortedShops();
+    body = `<div class="geo" id="geo">${S.geo?'เรียงสาขาจากตำแหน่งของคุณแล้ว':'กำลังหาสาขาใกล้คุณ…'}</div>
+      <div class="opts">${list.map(s => `<label class="opt"><input type="radio" name="shop" value="${esc(s.code)}" ${String(B.shop)===String(s.code)?'checked':''}>
+        <div class="t"><b>${esc(s.name)}</b>${String(s.code)===String(it.branch)?'<span class="mini g">เบอร์อยู่สาขานี้</span>':''}
+        <div class="shop-meta">${s.hours?'เปิด '+esc(s.hours):''}${s.phone?' โทร '+esc(s.phone):''}</div>
+        <div class="shop-links"><a href="${esc(mapsLink(s))}" target="_blank" rel="noopener">ดูแผนที่</a></div></div>
+        <div class="r">${s.km!=null?(s.km<10?s.km.toFixed(1):Math.round(s.km))+'<small>กม.</small>':''}</div></label>`).join('')}</div>
+      ${truthy(st.ALLOW_OTHER_SHOP)?'<p class="note" style="margin-top:8px">หากเลือกรับต่างสาขา พนักงานจะแจ้งระยะเวลาเตรียมซิมในแชท</p>':''}`;
+  } else if (B.step===2){
+    body = `<div class="form">
+      <label>ชื่อผู้จอง<input id="fName" autocomplete="name" value="${esc(B.name)}" maxlength="80"></label>
+      <label>เบอร์ติดต่อ<input id="fPhone" inputmode="tel" autocomplete="tel" value="${esc(B.phone)}" maxlength="12" placeholder="08x-xxx-xxxx"></label>
+      <label>หมายเหตุถึงพนักงาน (ถ้ามี)<textarea id="fNote" rows="2" maxlength="300">${esc(B.note)}</textarea></label>
+      <input class="hp" id="fHp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="consent"><input type="checkbox" id="fConsent" ${B.consent?'checked':''}><span>${esc(st.CONSENT_TEXT||'')}</span></label></div>`;
+  } else if (B.step===3){
+    const p = pkgInfo(B.pkg);
+    body = `<dl class="sum-list"><dt>แพ็กเกจ</dt><dd>${esc(p.name)}<br><span class="note">${money(p.price)} บาท/เดือน${p.months?` สัญญา ${p.months} เดือน`:''}</span></dd>
+      <dt>ค่าซิม</dt><dd>${esc(simOf(it).replace('ค่าซิม ',''))}</dd><dt>รับซิมที่</dt><dd>${esc(shopName(B.shop))}</dd>
+      <dt>ชื่อ</dt><dd>${esc(B.name)}</dd><dt>เบอร์ติดต่อ</dt><dd>${esc(B.phone)}</dd>${B.note?`<dt>หมายเหตุ</dt><dd>${esc(B.note)}</dd>`:''}</dl>
+      <p class="note" style="margin-top:14px">กดยืนยันแล้ว ระบบจะล็อกเบอร์ไว้ให้ ${esc(st.HOLD_MINUTES||60)} นาที และพาไปแชทกับพนักงานทาง Messenger เพื่อยืนยันการจอง</p>`;
+  }
+  const back = B.step>0 ? '<button class="btn line" type="button" id="bBack">ย้อนกลับ</button>' : '';
+  const nextLabel = B.step===3 ? 'ยืนยันการจอง' : 'ถัดไป';
+  openModal(`${head('เลือกเบอร์')}${stepper()}${selNum()}${body}${B.err?`<div class="err" role="alert">${esc(B.err)}</div>`:''}
+    <div class="actions">${back}<button class="btn primary" type="button" id="bNext">${nextLabel}</button></div>`);
+  B.err = '';
+  const sh = $('#sheet');
+  sh.querySelectorAll('input[name=pkg]').forEach(r => r.onchange = () => B.pkg = r.value);
+  sh.querySelectorAll('input[name=shop]').forEach(r => r.onchange = () => B.shop = r.value);
+  if (B.step===1 && !S.geo){
+    locate().then(() => { if (B.step===1 && !$('#modal').hidden) renderBooking(); })
+      .catch(e => { const g = $('#geo'); if (g) g.innerHTML = `${esc(e.message)} เลือกสาขาจากรายการได้เลย <button type="button" id="geoRetry">ลองอีกครั้ง</button>`;
+        const r = $('#geoRetry'); if (r) r.onclick = () => locate(true).then(renderBooking).catch(()=>toast('ยังระบุตำแหน่งไม่ได้')); });
+  }
+  if ($('#bBack')) $('#bBack').onclick = () => { saveForm(); B.step--; renderBooking(); };
+  $('#bNext').onclick = next;
+}
+function saveForm(){
+  if (B.step!==2) return;
+  B.name = $('#fName').value.trim(); B.phone = $('#fPhone').value.trim(); B.note = $('#fNote').value.trim();
+  B.consent = $('#fConsent').checked; B.hp = $('#fHp').value;
+}
+async function next(){
+  if (B.step===2){
+    saveForm();
+    const ph = B.phone.replace(/\D/g,'');
+    if (B.name.length<2) { B.err='กรุณากรอกชื่อผู้จอง'; return renderBooking(); }
+    if (!/^0\d{8,9}$/.test(ph)) { B.err='กรุณากรอกเบอร์ติดต่อ 10 หลัก เช่น 0812345678'; return renderBooking(); }
+    if (!B.consent) { B.err='กรุณากดยินยอมการเก็บข้อมูลก่อนจอง'; return renderBooking(); }
+  }
+  if (B.step<3){ B.step++; return renderBooking(); }
+  const btn = $('#bNext'); btn.disabled = true; btn.textContent = 'กำลังล็อกเบอร์…';
+  try{
+    const r = await api('book', {number:B.it.num, branch:B.it.branch, pkg:B.pkg, shop:B.shop, name:B.name, phone:B.phone, note:B.note, consent:B.consent, hp:B.hp||''});
+    S.items = S.items.filter(x => !(x.num===B.it.num && x.branch===B.it.branch)); apply();
+    showDone(r);
+  }catch(e){
+    if (e.code==='TAKEN'){
+      S.items = S.items.filter(x => !(x.num===B.it.num && x.branch===B.it.branch)); apply();
+      openModal(`${head('เบอร์นี้ไม่ว่างแล้ว')}<p>${esc(e.message)}</p><div class="actions"><button class="btn primary x" type="button">เลือกเบอร์อื่น</button></div>`);
+    } else { B.err = e.message; renderBooking(); }
+  }
+}
+
+function copyText(t){
+  let ok = false;
+  try{ const ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, t.length); ok = document.execCommand('copy'); ta.remove(); }catch(e){}
+  if (navigator.clipboard) navigator.clipboard.writeText(t).catch(()=>{});
+  return ok || !!navigator.clipboard;
+}
+function showDone(r){
+  const until = new Date(r.expiresAt);
+  const hhmm = until.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
+  openModal(`${head('ล็อกเบอร์ให้แล้ว')}
+    <div class="done-code"><small>รหัสจอง</small><b>${esc(r.code)}</b></div>
+    <div class="timer" id="timer">ล็อกไว้ถึง ${hhmm} น.</div>
+    <button class="btn gold" type="button" id="goChat">คัดลอกข้อความ แล้วเปิดแชท Messenger</button>
+    <ol class="howto"><li>กดปุ่มด้านบน ระบบจะคัดลอกข้อความสรุปให้</li><li>ในแชท กดค้างที่ช่องพิมพ์ เลือก “วาง” แล้วส่ง</li><li>รอพนักงานตอบกลับเพื่อยืนยันการจอง</li></ol>
+    <label class="note" for="msg" style="display:block;margin:14px 0 4px">ข้อความที่จะส่ง</label>
+    <textarea class="msg" id="msg" readonly>${esc(r.message)}</textarea>
+    <div class="actions"><button class="btn line" type="button" id="copyOnly">คัดลอกข้อความ</button><button class="btn line x" type="button">ปิด</button></div>`);
+  $('#goChat').onclick = () => { copyText(r.message); toast('คัดลอกข้อความแล้ว'); if (r.messengerUrl) window.open(r.messengerUrl, '_blank', 'noopener'); else toast('ยังไม่ได้ตั้งค่าเพจ Facebook'); };
+  $('#copyOnly').onclick = () => { copyText(r.message); toast('คัดลอกข้อความแล้ว'); };
+  const tick = () => { const ms = r.expiresAt - Date.now(); const el = $('#timer'); if (!el) return;
+    if (ms<=0){ el.textContent = 'หมดเวลาล็อกแล้ว หากพนักงานยังไม่ยืนยัน กรุณาจองใหม่'; clearInterval(modalTick); return; }
+    const m = Math.floor(ms/60000), s = Math.floor(ms/1000)%60; el.textContent = `ล็อกไว้ถึง ${hhmm} น. (เหลือ ${m}:${String(s).padStart(2,'0')})`; };
+  tick(); modalTick = setInterval(tick, 1000);
+}
+
+/* ---------- สาขาใกล้คุณ ---------- */
+function openShops(){
+  const draw = () => {
+    const list = S.shops.slice(); list.forEach(s => s.km = (S.geo && s.lat && s.lng) ? distKm(S.geo, s) : null);
+    list.sort((a,b) => (a.km ?? 1e9) - (b.km ?? 1e9));
+    openModal(`${head('สาขาใกล้คุณ')}<div class="geo" id="geo">${S.geo?'เรียงจากตำแหน่งของคุณ':'กำลังหาตำแหน่ง…'}</div>
+      <div class="opts">${list.map(s => `<div class="opt" style="cursor:default"><div class="t"><b>${esc(s.name)}</b>
+        <div class="shop-meta">${s.hours?'เปิด '+esc(s.hours):''}${s.phone?' โทร '+esc(s.phone):''}</div>
+        <div class="shop-links"><a href="${esc(mapsLink(s))}" target="_blank" rel="noopener">นำทาง</a>
+        <a href="?b=${encodeURIComponent(s.code)}" data-branch="${esc(s.code)}">ดูเบอร์ของสาขานี้</a></div></div>
+        <div class="r">${s.km!=null?(s.km<10?s.km.toFixed(1):Math.round(s.km))+'<small>กม.</small>':''}</div></div>`).join('')}</div>`);
+  };
+  draw();
+  if (!S.geo) locate().then(draw).catch(e => { const g=$('#geo'); if (g) g.textContent = e.message; });
+}
+
+/* ---------- เช็กสถานะการจอง ---------- */
+function openStatus(){
+  openModal(`${head('ตรวจสอบสถานะการจอง')}<div class="form">
+    <label>รหัสจอง<input id="sCode" placeholder="LNxxxxxx-XXXX" autocapitalize="characters"></label>
+    <label>เบอร์ติดต่อ 4 ตัวท้าย<input id="sLast" inputmode="numeric" maxlength="4"></label></div>
+    <div id="sOut"></div><div class="actions"><button class="btn primary" type="button" id="sGo">ตรวจสอบ</button></div>`);
+  $('#sGo').onclick = async () => {
+    const out = $('#sOut'); out.innerHTML = '<p class="note">กำลังตรวจสอบ…</p>';
+    try{ const r = await api('status', {code:$('#sCode').value.trim(), last4:$('#sLast').value.trim()});
+      out.innerHTML = `<dl class="sum-list" style="margin-top:14px"><dt>สถานะ</dt><dd>${esc(r.statusText)}</dd><dt>เบอร์</dt><dd>${esc(r.number)}</dd>
+        <dt>แพ็กเกจ</dt><dd>${esc(r.package)}</dd><dt>รับซิมที่</dt><dd>${esc(r.shop)}</dd></dl>`;
+    }catch(e){ out.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+  };
+}
+
+/* ===================== events ===================== */
+let qTimer;
+$('#q').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g,''); clearTimeout(qTimer); qTimer = setTimeout(()=>{ S.f.q = e.target.value; apply(); }, 220); });
+document.querySelectorAll('.seg button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', x===b)); S.f.mode = b.dataset.mode; apply(); });
+$('#catChips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return;
+  document.querySelectorAll('#catChips .chip').forEach(x => x.setAttribute('aria-pressed', x===b)); S.f.cat = b.dataset.cat; apply(); });
+$('#moreToggle').onclick = () => { const f = $('#filters'); f.hidden = !f.hidden; $('#moreToggle').setAttribute('aria-expanded', !f.hidden); };
+[['#fTopic','topic'],['#fPkg','maxPkg'],['#fSum','sum'],['#fBranch','branch'],['#fGood','good'],['#sort','sort']]
+  .forEach(([s,k]) => $(s).onchange = e => { S.f[k] = e.target.value; apply(); });
+$('#fExcl').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; const d = b.dataset.d;
+  S.f.excl.has(d) ? S.f.excl.delete(d) : S.f.excl.add(d); b.setAttribute('aria-pressed', S.f.excl.has(d)); apply(); });
+$('#tags').addEventListener('click', e => { const b = e.target.closest('.tag'); if (!b) return; const k = b.dataset.k;
+  if (k==='excl'){ S.f.excl = new Set(); document.querySelectorAll('#fExcl button').forEach(x=>x.setAttribute('aria-pressed','false')); }
+  else { S.f[k] = ''; const map = {branch:'#fBranch',topic:'#fTopic',maxPkg:'#fPkg',sum:'#fSum',good:'#fGood'}; if (map[k]) $(map[k]).value=''; }
+  apply(); });
+$('#grid').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return; const it = S.view[+b.dataset.i];
+  if (b.dataset.act==='select') openBooking(it); else openPredict(it); });
+$('#more').onclick = renderMore;
+if ('IntersectionObserver' in window) new IntersectionObserver(es => { if (es[0].isIntersecting && !$('#more').hidden) renderMore(); }, {rootMargin:'600px'}).observe($('#more'));
+$('#btnShops').onclick = openShops;
+$('#sheet').addEventListener('click', e => { const a = e.target.closest('[data-branch]'); if (!a) return; e.preventDefault(); showBranch(a.dataset.branch); });   // v1.2.3
+$('#btnStatus').onclick = openStatus;
+$('#btnStatus2').onclick = openStatus;
+
+/* ===================== โหมดตัวอย่าง (เมื่อยังไม่ใส่ API_URL) ===================== */
+function demoApi(action, p){
+  const wait = v => new Promise(r => setTimeout(() => r(v), 350));
+  if (action==='config') return wait({
+    settings:{SITE_NAME:'เบอร์มงคลรายเดือน', SITE_TAGLINE:'เลือกเบอร์ที่ใช่ แล้วรับซิมที่สาขาใกล้คุณ', HOLD_MINUTES:60, ALLOW_OTHER_SHOP:'TRUE',
+      DEFAULT_SIM_PRICE:'', PICKUP_NOTE:'เบอร์มงคลรายเดือน รับซิมได้ที่สาขาใกล้คุณ',
+      CONSENT_TEXT:'ยินยอมให้เก็บชื่อและเบอร์ติดต่อ เพื่อใช้ติดต่อเรื่องการจองเบอร์นี้เท่านั้น',
+      DISCLAIMER:'คำทำนายคำนวณจากศาสตร์ตัวเลข (ผลรวมและคู่เลข) ใช้ประกอบการตัดสินใจ ไม่ใช่การรับประกันผล', FB_PAGE_URL:'https://m.me/'},
+    artwork:[], shops:DEMO.shops, packages:DEMO.packages,
+    categories:DEMO.cats.map((c,i)=>({raw:c[0], display:c[1], description:'', simPrice:c[2], active:true, sort:i})),
+    pairs:DEMO.pairs.map(r=>({pair:r[0], level:r[1], topic:r[2], meaning:r[3]})), sums:DEMO.sums.map(r=>({sum:r[0], level:r[1], meaning:r[2]}))
+  });
+  if (action==='numbers'){
+    let seed = 7; const rnd = () => (seed = (seed*16807) % 2147483647) / 2147483647;
+    const pre = ['080','081','082','083','086','089','092','093','095','096','097','098','099','061','062','063','064','065'];
+    const n = []; const pr = DEMO.packages.map(p=>p.code);
+    for (let i=0;i<180;i++){ let s = pre[Math.floor(rnd()*pre.length)]; for (let k=0;k<7;k++) s += Math.floor(rnd()*10);
+      n.push([s, Math.floor(rnd()*DEMO.cats.length), Math.floor(rnd()*pr.length), Math.floor(rnd()*DEMO.shops.length), '', '']); }
+    return wait({v:Date.now(), b:DEMO.shops.map(s=>s.code), c:DEMO.cats.map(c=>c[0]), p:pr, n, held:[]});
+  }
+  if (action==='book'){ const code = 'LN' + new Date().toISOString().slice(2,10).replace(/-/g,'') + '-DEMO';
+    const pk = pkgInfo(p.pkg);
+    return wait({code, status:'PENDING', expiresAt:Date.now()+3600000, holdMinutes:60, messengerUrl:'',
+      message:`สวัสดีค่ะ ขอจองเบอร์มงคล\nรหัสจอง: ${code}\nเบอร์: ${fmtNum(p.number)}\nแพ็กเกจ: ${pk.name} (${money(pk.price)} บาท/เดือน สัญญา ${pk.months} เดือน)\nรับซิมที่: ${shopName(p.shop)}\nชื่อ: ${p.name}\nเบอร์ติดต่อ: ${p.phone}`}); }
+  if (action==='status') return Promise.reject(new Error('โหมดตัวอย่าง: ยังไม่ได้เชื่อมระบบจริง'));
+  return Promise.reject(new Error('unknown'));
+}
+const DEMO = {
+  cats:[['Tri-Luck','เบอร์ตรีโชค',''],['Millionaire_Lucky','เบอร์เศรษฐี',''],['Get_Learn','เบอร์เสริมการเรียน',''],['PhoenixDragon','เบอร์หงส์มังกร',''],
+    ['Sun_Money','เบอร์สุริยะเสริมทรัพย์',''],['Ganesha_Lucky','เบอร์พิฆเนศ',''],['Pretty Decoder','เบอร์พลิกชีวิต',''],['Get Wealth','เบอร์เสริมความมั่งคั่ง','']],
+  packages:[['Premium_299_12M','Premium 299',299,12],['Premium_399_6M','Premium 399',399,6],['Premium_499_6M','Premium 499',499,6],['Premium_599_6M','Premium 599',599,6],
+    ['Premium_699_6M','Premium 699',699,6],['Premium_899_6M','Premium 899',899,6],['Premium_1199_12M','Premium 1199',1199,12]]
+    .map(p=>({code:p[0], name:p[1], price:p[2], months:p[3], detail:'', active:true})),
+  shops:[['1255','Central Phuket Festival',7.8916,98.3678],['1213','Central Phuket Floresta',7.8913,98.3684],
+    ['1205','Central Hat Yai',7.0004,100.4795],['1245','Central Festival Hat Yai',7.0075,100.4692],
+    ['1252','Hatyai Village',7.0155,100.4766],['1204','Central Surat Thani',9.1185,99.3058],
+    ['1215','Central Nakhon Si Thammarat',8.4376,99.9597],['1216','Central Samui',9.5340,100.0617],['1259','Robinson Trang',7.5600,99.6220]]
+    .map(s=>({code:s[0], name:s[1], lat:s[2], lng:s[3], hours:'10:30-20:30', phone:'', fbLink:''})),
+  pairs:[['14','ดี','เงิน,งาน','ความคิดสร้างสรรค์ การเงินหมุนเวียนดี'],['15','ดี','รัก,งาน','เสน่ห์ดี ผู้ใหญ่เมตตา'],['19','ดี','งาน,โชค','ความสำเร็จ ชื่อเสียง'],
+    ['24','ดี','เงิน,รัก','เสน่ห์แรง เจรจาเก่ง การเงินดี'],['26','ดี','เงิน,โชค','โชคลาภ ความสุขสบาย'],['28','ดี','โชค','โชคลาภก้อนใหญ่'],
+    ['36','ดี','รัก,เงิน','ความรักความสุข การค้าขายดี'],['44','ดี','งาน,เงิน','ความคิดดี พูดจาโน้มน้าวเก่ง'],['45','ดี','งาน','สติปัญญาดี ผู้ใหญ่สนับสนุน'],
+    ['46','ดี','เงิน,รัก','การเงินมั่นคง ความรักสมหวัง'],['55','ดี','งาน','ความมั่นคง สติปัญญาเฉียบแหลม'],['56','ดี','เงิน,โชค,รัก','โชคลาภ ความสุขสมบูรณ์'],
+    ['59','ดี','โชค,งาน','สิ่งศักดิ์สิทธิ์คุ้มครอง'],['66','ดี','รัก','เสน่ห์ ความรัก'],['69','ดี','รัก,โชค','เสน่ห์ เป็นที่รัก'],['78','ดี','งาน,เงิน','อำนาจ บารมี'],
+    ['89','ดี','เงิน,งาน','เงินทองไหลมา'],['99','ดี','โชค,งาน','ความสำเร็จสูง'],['00','ระวัง','งาน','สิ่งต่างๆ มักสะดุด'],['07','ระวัง','สุขภาพ','ระวังสุขภาพ'],
+    ['13','ระวัง','งาน','ใจร้อน มีเรื่องขัดแย้ง'],['18','ระวัง','เงิน,สุขภาพ','การเงินรั่วไหล'],['27','ระวัง','รัก','ความผิดหวังในความรัก'],
+    ['34','ระวัง','งาน','การสื่อสารคลาดเคลื่อน'],['37','ระวัง','งาน','อุปสรรค ความเครียด'],['48','ระวัง','เงิน','ตัดสินใจผิดพลาดเรื่องเงิน'],['67','ระวัง','รัก','ความรักไม่สมหวัง']],
+  sums:[['24','ดี','เสน่ห์ เจรจาเก่ง'],['36','ดี','ความรัก ความสุข'],['40','ดี','สติปัญญา'],['41','ดี','เงินทองหมุนเวียนดี'],['42','ดี','เสน่ห์ การเงินดี'],
+    ['44','ดี','ความคิดก้าวหน้า'],['45','ดี','ผู้ใหญ่อุปถัมภ์'],['46','ดี','การเงินมั่นคง'],['50','ดี','สิ่งศักดิ์สิทธิ์คุ้มครอง'],['51','ดี','เสน่ห์ ความสำเร็จ'],
+    ['54','ดี','สำเร็จด้านการงาน'],['55','ดี','ความมั่นคง'],['56','ดี','โชคลาภ'],['59','ดี','ความสำเร็จ'],['63','ดี','ความรัก'],['64','ดี','การเงินดี'],['65','ดี','โชคลาภ ความสุข'],
+    ['37','ระวัง','อุปสรรค ความขัดแย้ง'],['43','ระวัง','ระวังความสับสน'],['48','ระวัง','ตัดสินใจผิดพลาด'],['57','ระวัง','ความดื้อรั้น']]
+};
+
+init();
+</script>
+</body>
+</html>
